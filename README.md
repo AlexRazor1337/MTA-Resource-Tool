@@ -29,4 +29,4 @@ This script should work with any Python 3.*, no non-standard libraries are used.
 ## Credits
 
 **AlexRazor** - main tool code  
-**MTA:SA Team** - luac_mta.exe and ofcourse MTA:SA itself
+**MTA:SA Team** - luac_mta.exe and of course, [MTA:SA itself](https://github.com/multitheftauto/mtasa-blue)
