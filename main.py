@@ -27,15 +27,15 @@ if len(sys.argv) > 1:
         if not os.path.exists(resource_name):
             os.mkdir(resource_name)
         else:
-            resource_name += " " + str(datetime.now().time()).replace(":", ".", -1)
+            resource_name += " " + str(datetime.now().time()).replace(":", ".", -1) #adds time to folder name to handle name dublicates
             os.mkdir(resource_name)
         os.chdir(resource_name)
         print("Working with folder, compiling to", resource_name)
-        for dirPath, dirs, files in os.walk(sys.argv[1]):
+        for dirPath, dirs, files in os.walk(sys.argv[1]): #walks through everything in root folder
             for dir in dirs:
-                if not dir.startswith('.'):
+                if not dir.startswith('.'): #ignoring .git and etc. basically
                     dir_path = dirPath.replace(sys.argv[1], "")
-                    if dir_path != "":
+                    if dir_path != "": #check if it is not in the root folder
                         folders = dir_path.split("\\")
                         os.chdir(folders[-1])
                     os.mkdir(dir)
@@ -47,7 +47,7 @@ if len(sys.argv) > 1:
                         else:
                             copyfile(dirPath + "\\" + file, file)
 
-            if len(dirs) == 0:
+            if len(dirs) == 0: #when there are no folders inside another folder, it can't iterate through it, so previsios cycle won't run
                 dir_path = dirPath.replace(sys.argv[1], "")
                 folders = dir_path.split("\\")
                 if not folders[-1].startswith('.'):
@@ -69,6 +69,6 @@ if len(sys.argv) > 1:
                 meta_file.write(file_string)
                 meta_file.truncate()            
         else:
-            print("WARNING: No meta file found in the resource directory!")
+            print("WARNING: No meta file was found in the resource directory!")
 else:
     sys.exit("No file or directory specified.")
