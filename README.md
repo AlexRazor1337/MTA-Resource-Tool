@@ -10,6 +10,7 @@ At the moment it can compile single file or whole resource using **luac_mta.exe*
 3. Place it in a folder with main script
 
 To compile a resource you must call script with full path of resource folder as argument, see examples.
+After compiling, resource will appear at folder Compiled Resources in script directory. If you are compiling single file, then it will appear at script directory.
 
 ## Examples
 
@@ -17,7 +18,6 @@ This will compile single resource:
 ```
  main.py D:\Resources\ResourceToCompile
 ```
-After compiling, resource will appear at folder Compiled Resources in script directory.
 
 Compiling single file:
 ```
