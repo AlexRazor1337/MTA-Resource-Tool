@@ -2,3 +2,6 @@ luac_mta.exe
 core.lua
 core.luac
 luac.out
+c3.lua
+c2.lua
+teestresource/
