@@ -17,6 +17,7 @@ This will compile single resource:
 ```
  main.py D:\Resources\ResourceToCompile
 ```
+After compiling, resource will appear at folder Compiled Resources in script directory.
 
 Compiling single file:
 ```
