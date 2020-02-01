@@ -18,6 +18,7 @@ if len(sys.argv) > 1:
         print("Working with single file, compiling to " + file_basename + "c")
         compile_file(sys.argv[1])
     elif os.path.isdir(sys.argv[1]):
+        
         if not os.path.exists("Compiled Resources"):
             os.mkdir("Compiled Resources")
         os.chdir("Compiled Resources")
@@ -29,18 +30,37 @@ if len(sys.argv) > 1:
             resource_name += " " + str(datetime.now().time()).replace(":", ".", -1)
             os.mkdir(resource_name)
         os.chdir(resource_name)
+        print("Working with folder, compiling to", resource_name)
+        for dirPath, dirs, files in os.walk(sys.argv[1]):
+            for dir in dirs:
+                if not dir.startswith('.'):
+                    dir_path = dirPath.replace(sys.argv[1], "")
+                    if dir_path != "":
+                        folders = dir_path.split("\\")
+                        os.chdir(folders[-1])
+                    os.mkdir(dir)
 
-        dir_contaiments = os.listdir(sys.argv[1])
-        for object in dir_contaiments:
-            file_path = sys.argv[1] + "\\" + object
+                    for file in files:
+                        name, ext = os.path.splitext(file)
+                        if ext == ".lua":
+                            compile_file(dirPath + "\\" + file)
+                        else:
+                            copyfile(dirPath + "\\" + file, file)
 
-            if os.path.isfile(file_path):
-                name, ext = os.path.splitext(object)
-                print(name, ext)
-                if ext == ".lua":
-                    compile_file(file_path)
-                else:
-                    copyfile(file_path, object)
+            if len(dirs) == 0:
+                dir_path = dirPath.replace(sys.argv[1], "")
+                folders = dir_path.split("\\")
+                if not folders[-1].startswith('.'):
+                    if dir_path != "":
+                        os.chdir(folders[-1])
+                    for file in files:
+                        name, ext = os.path.splitext(file)
+                        if ext == ".lua":
+                            compile_file(dirPath + "\\" + file)
+                        else:
+                            copyfile(dirPath + "\\" + file, file)
+        
+        os.chdir(working_dir + "\Compiled Resources\\" + "\\" + resource_name)
         if os.path.isfile("meta.xml"):
             with open("meta.xml", "r+") as meta_file:
                 file_string = meta_file.read()
