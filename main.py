@@ -2,6 +2,7 @@ import subprocess, os, sys, json
 from datetime import datetime
 from shutil import copyfile
 
+#info levels: 0 - detailed info, 1 - default info, 2 - warnings, 3 - errors
 default_config = {'obfuscation_level': 'e3','info_level': 1, 'restricted_extensions': []}
 possible_obfuscation_levels = ["e", "e2", "e3"]
 config = {}
