@@ -2,12 +2,18 @@ import subprocess, os, sys
 from datetime import datetime
 from shutil import copyfile
 
+obfuscation_level = "e3"
+error_level = 0 # 0 - detailed info, 1 - info, 2 - warning, 3 - error
+
 def compile_file(file_path):
     file_basename = os.path.basename(file_path)
+    if error_level == 0:
+        print("INFO: Compiling", file_basename)
     if os.path.isfile(file_basename + "c"):
         file_basename = str(datetime.now().time()).replace(":", ".", -1) + file_basename
-        print("File with this name already exists, compiling to " + file_basename + " instead")
-    arguments = ["-e3", " -o " + file_basename + "c"," -- ", file_path]
+        if error_level < 3:
+            print("WARNING: File with this name already exists, compiling to " + file_basename + " instead")
+    arguments = ["-" + obfuscation_level, " -o " + file_basename + "c"," -- ", file_path]
     subprocess.call([working_dir + "\luac_mta.exe", arguments])
 
 if len(sys.argv) > 1:
@@ -15,7 +21,8 @@ if len(sys.argv) > 1:
     os.chdir(working_dir)
     if os.path.isfile(sys.argv[1]):
         file_basename = os.path.basename(sys.argv[1])
-        print("Working with single file, compiling to " + file_basename + "c")
+        if error_level < 2:
+            print("INFO: Working with single file, compiling to " + file_basename + "c")
         compile_file(sys.argv[1])
     elif os.path.isdir(sys.argv[1]):
         
@@ -30,7 +37,8 @@ if len(sys.argv) > 1:
             resource_name += " " + str(datetime.now().time()).replace(":", ".", -1) #adds time to folder name to handle name dublicates
             os.mkdir(resource_name)
         os.chdir(resource_name)
-        print("Working with folder, compiling to", resource_name)
+        if error_level < 2:
+            print("INFO: Working with folder, compiling to", resource_name)
         for dirPath, dirs, files in os.walk(sys.argv[1]): #walks through everything in root folder
             for dir in dirs:
                 if not dir.startswith('.'): #ignoring .git and etc. basically
@@ -46,6 +54,8 @@ if len(sys.argv) > 1:
                             compile_file(dirPath + "\\" + file)
                         else:
                             copyfile(dirPath + "\\" + file, file)
+                            if error_level == 0:
+                                print("INFO: Copying", file)
 
             if len(dirs) == 0: #when there are no folders inside another folder, it can't iterate through it, so previsios cycle won't run
                 dir_path = dirPath.replace(sys.argv[1], "")
@@ -59,6 +69,8 @@ if len(sys.argv) > 1:
                             compile_file(dirPath + "\\" + file)
                         else:
                             copyfile(dirPath + "\\" + file, file)
+                            if error_level == 0:
+                                print("INFO: Copying", file)
         
         os.chdir(working_dir + "\Compiled Resources\\" + "\\" + resource_name)
         if os.path.isfile("meta.xml"):
@@ -67,8 +79,11 @@ if len(sys.argv) > 1:
                 meta_file.seek(0)
                 file_string = file_string.replace(".lua", ".luac", -1)
                 meta_file.write(file_string)
-                meta_file.truncate()            
+                meta_file.truncate()       
         else:
-            print("WARNING: No meta file was found in the resource directory!")
+            if error_level < 3:
+                print("WARNING: No meta file was found in the resource directory!")
+    if error_level < 2:
+        print("INFO: Compiled successfully.")
 else:
     sys.exit("No file or directory specified.")
