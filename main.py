@@ -1,5 +1,6 @@
 import subprocess, os, sys
 from datetime import datetime
+from shutil import copyfile
 
 def compile_file(file_path):
     file_basename = os.path.basename(file_path)
@@ -31,10 +32,23 @@ if len(sys.argv) > 1:
 
         dir_contaiments = os.listdir(sys.argv[1])
         for object in dir_contaiments:
-            os.path.isfile(object) 
-            print(object)
-        #arguments = ["-e3", " -o " + os.path.basename(sys.argv[1]) + "c"," -- ", sys.argv[1]]
-        #subprocess.call([working_dir + "\luac_mta.exe", arguments])    
-        pass
+            file_path = sys.argv[1] + "\\" + object
+
+            if os.path.isfile(file_path):
+                name, ext = os.path.splitext(object)
+                print(name, ext)
+                if ext == ".lua":
+                    compile_file(file_path)
+                else:
+                    copyfile(file_path, object)
+        if os.path.isfile("meta.xml"):
+            with open("meta.xml", "r+") as meta_file:
+                file_string = meta_file.read()
+                meta_file.seek(0)
+                file_string = file_string.replace(".lua", ".luac", -1)
+                meta_file.write(file_string)
+                meta_file.truncate()            
+        else:
+            print("WARNING: No meta file found in the resource directory!")
 else:
     sys.exit("No file or directory specified.")
