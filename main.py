@@ -10,13 +10,12 @@ def init_settings():
     try:
         with open('settings.json', 'r') as f:
             config = json.load(f)
-            print(config)
     except IOError:
         with open('settings.json', 'w+') as f:
             json.dump(default_config, f)
             config = default_config
     if not config['obfuscation_level'] in possible_obfuscation_levels:
-        print("WARNING: Inappropriate obfuscation level, settings will be reset.")
+        print("ERROR: Inappropriate obfuscation level, settings will be reset.")
         os.remove('settings.json')
         config = default_config
     return config
@@ -28,7 +27,7 @@ def compile_file(file_path):
     if os.path.isfile(file_basename + "c"):
         file_basename = str(datetime.now().time()).replace(":", ".", -1) + file_basename
         if config['info_level'] < 3:
-            print("WARNING: File with this name already exists, compiling to " + file_basename + " instead!")
+            print("WARNING: File with this name already exists, compiling to", file_basename, "instead!")
     arguments = ["-" + config['obfuscation_level'], " -o " + file_basename + "c"," -- ", file_path]
     subprocess.call([working_dir + "\luac_mta.exe", arguments])
 
@@ -39,7 +38,7 @@ if len(sys.argv) > 1:
     if os.path.isfile(sys.argv[1]):
         file_basename = os.path.basename(sys.argv[1])
         if config['info_level'] < 2:
-            print("INFO: Working with single file, compiling to " + file_basename + "c")
+            print("INFO: Working with single file, compiling to ", file_basename, "c")
         compile_file(sys.argv[1])
     elif os.path.isdir(sys.argv[1]):
         
@@ -56,7 +55,7 @@ if len(sys.argv) > 1:
         os.chdir(resource_name)
         if config['info_level'] < 2:
             print("INFO: Working with folder, compiling to", resource_name)
-        for dirPath, dirs, files in os.walk(sys.argv[1]): #walks through everything in root folder
+        for dirPath, dirs, files in os.walk(sys.argv[1]): #main cycle, walks through everything in root folder
             for dir in dirs:
                 if not dir.startswith('.'): #ignoring .git and etc. basically
                     dir_path = dirPath.replace(sys.argv[1], "")
