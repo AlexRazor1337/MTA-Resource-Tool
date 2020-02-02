@@ -1,8 +1,9 @@
 import subprocess, os, sys
 from datetime import datetime
 
-config = {'manual': False,'info_level': 1, 'restricted_extensions': [], 'author': "Default"}
-type_cases = {'client':["c_", "client"], 'server':["s_", "server"]}
+config = {'manual': False,'info_level': 0, 'restricted_extensions': [], 'author': "Default", 'cache':"false"}
+type_cases = {'client':["client"], 'server':["server"]}
+prefix_cases = {'client':["c_"], 'server':["s_"]}
 
 def get_type(file_path, name):
     if config['manual']:
@@ -13,14 +14,21 @@ def get_type(file_path, name):
     else:
         name = name.lower()
         for type in type_cases:
-            for base_case in type_cases[type]:
+            for base_case in type_cases[type]: #check is file name contains cases listed in dictionary above
                 if name.find(base_case) >= 0:
                     return type
+            for base_case in prefix_cases[type]:
+                if name.startswith(base_case):
+                    return type
 
+        
         folders = [folder.lower() for folder in file_path.split("\\")]
         for folder in folders:
             for type in type_cases:
-                if folder.find(type) >= 0:
+                if folder.find(type) >= 0: #same check, but for folders
+                    return type
+            for base_case in prefix_cases[type]:
+                if name.startswith(base_case):
                     return type
 
     if config['info_level'] < 3:
@@ -45,7 +53,11 @@ if len(sys.argv) > 1 and os.path.isdir(sys.argv[1]):
                         type = get_type(file_path, name)
                         if config['info_level'] == 0:
                             print("INFO:", file_path, "will be written as", type, "file")
-                        meta_file.write("\t" + "<script src=\"" + file_path + "\" type=\"" + type + "\"/>" + "\n")
+                        if type == "client" and config['cache']:
+                            post_addition = 'cache = "false"' 
+                        else:
+                            post_addition = ""
+                        meta_file.write("\t" + "<script src=\"" + file_path + "\" type=\"" + type + "\" " + post_addition +"/>" + "\n")
                     elif not ext in config['restricted_extensions']:
                         if config['info_level'] == 0:
                             print("INFO:", file_path, "will be written")
