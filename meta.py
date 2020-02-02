@@ -2,34 +2,30 @@ import subprocess, os, sys
 from datetime import datetime
 
 config = {'manual': False,'info_level': 1, 'restricted_extensions': [], 'author': "Default"}
+type_cases = {'client':["c_", "client"], 'server':["s_", "server"]}
 
 def get_type(file_path, name):
-    name = name.lower()
-    if name == "client":
-        return "client"
-    elif name == "server":
-        return "server"
-
-    if name.startswith('c_'):
-        return "client"
-    elif name.startswith('s_'):
-        return "server"
-
-    folders = [folder.lower() for folder in file_path.split("\\")]
-    if "client" in folders:
-        return "client"
-    elif "server" in folders:
-        return "server"
     if config['manual']:
-        type = input("Choose type for " + file_path + os.sep + name)
-        if "client".find(type) >= 0:
-            return "client"
-        elif "server".find(type) >= 0:
-            return "server"
+        input_type = input("Choose type for " + file_path + os.sep + name)
+        for type in type_cases:
+            if input_type.find(type) >= 0:
+                return type
     else:
-        if config['info_level'] < 3:
-            print("WARNING: Can't determine file type!")
-        return "shared"
+        name = name.lower()
+        for type in type_cases:
+            for base_case in type_cases[type]:
+                if name.find(base_case) >= 0:
+                    return type
+
+        folders = [folder.lower() for folder in file_path.split("\\")]
+        for folder in folders:
+            for type in type_cases:
+                if folder.find(type) >= 0:
+                    return type
+
+    if config['info_level'] < 3:
+        print("WARNING: Can't determine file type!")
+    return "shared"
 
 if len(sys.argv) > 1 and os.path.isdir(sys.argv[1]):
     os.chdir(sys.argv[1])
