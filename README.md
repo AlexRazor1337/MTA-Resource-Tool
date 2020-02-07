@@ -6,8 +6,7 @@ At the moment it can compile single file or whole resource using **luac_mta.exe*
 ## Getting Started
 
 1. Download this script
-2. [Download luac_mta.exe ](http://luac.mtasa.com/files/windows/x86/luac_mta.exe)
-3. Place it in a folder with main script
+2. Run install-luac.bat
 
 To compile a resource you must call script with full path of resource folder as argument, see examples.
 After compiling, resource will appear at folder Compiled Resources in script directory. If you are compiling single file, then it will appear at script directory.
