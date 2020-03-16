@@ -1,13 +1,13 @@
 import subprocess, os, sys
 from datetime import datetime
 
-config = {'manual': False,'info_level': 0, 'restricted_extensions': [], 'ignore_files': ["meta.xml", "meta-generated.xml"], 'author': "Default", 'cache': False, 'sort_type': 1}
+config = {'manual': False,'info_level': 0, 'restricted_extensions': [], 'ignore_files': ["meta.xml", "meta-generated.xml"], 'author': "Default", 'cache': False, 'override': True}
 type_cases = {'client':["client"], 'server':["server"]}
 prefix_cases = {'client':["c_"], 'server':["s_"]}
 
 def get_type(file_path, name):
     if config['manual']:
-        input_type = input("Choose type for " + file_path + os.sep + name)
+        input_type = input("USER-INPUT: Choose type for " + file_path + os.sep + name)
         for type in type_cases:
             if input_type.find(type) >= 0:
                 return type
@@ -83,5 +83,18 @@ if len(sys.argv) > 1 and os.path.isdir(sys.argv[1]):
                             print("INFO:", file_path, "has restricted extensions")
 
         meta_file.write("</meta>")
+    if os.path.isfile("meta.xml"):
+        if config['override']:
+            toOverwite = input("USER-INPUT: Should the meta.xml be overwritten by newly generated?")
+            if "y" in toOverwite:
+                if config['info_level'] < 3:
+                    print("WARNING: meta.xml will be overwritten!")
+                os.rename("meta.xml", ".meta-old xml " + str(datetime.now().time()).replace(":", ".", -1))
+                os.rename("meta-generated.xml", "meta.xml")
+            else:
+                if config['info_level'] < 3:
+                    print("WARNING: meta.xml won't be overwritten!")
+    else:
+        os.rename("meta-generated.xml", "meta.xml")
 else:
     sys.exit("ERROR: No file or directory specified!")
