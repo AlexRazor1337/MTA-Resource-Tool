@@ -2,7 +2,7 @@ import subprocess, os, sys
 from datetime import datetime
 
 
-config = {'manual': False,'info_level': 0, 'restricted_extensions': [], 'ignore_files': ["meta.xml", "meta-generated.xml"], 'author': "Default", 'cache': False, 'override': True, 'generated_exported': True}
+config = {'manual': False,'info_level': 0, 'restricted_extensions': [], 'ignore_files': ["meta.xml", "meta-generated.xml"], 'author': "Default", 'cache': False, 'override': True, 'generate_exported': True}
 type_cases = {'client':["client"], 'server':["server"]}
 prefix_cases = {'client':["c_"], 'server':["s_"]}
 
@@ -79,7 +79,8 @@ if len(sys.argv) > 1 and os.path.isdir(sys.argv[1]):
                             post_addition = 'cache = "false"' 
                         else:
                             post_addition = ""
-                        obtain_exported_functions(file_path, type)
+                        if config['generate_exported']:
+                            obtain_exported_functions(file_path, type)
                         meta_row = "\t" + "<script src=\"" + file_path + "\" type=\"" + type + "\" " + post_addition +"/>" + "\n"
                         meta_file.write(meta_row)
 
@@ -94,8 +95,9 @@ if len(sys.argv) > 1 and os.path.isdir(sys.argv[1]):
                         if config['info_level'] == 0:
                             print("INFO:", file_path, "has restricted extensions")
 
-        for line in exported_functions:
-            meta_file.write(line)
+        if config['generate_exported']:
+            for line in exported_functions:
+                meta_file.write(line)
 
         meta_file.write("</meta>")
 
