@@ -38,7 +38,7 @@ def get_type(file_path, name):
 
 exported_functions = list()
 def obtain_exported_functions(file, type):
-    with open(file) as f:
+    with open(file, encoding="utf8") as f:
         lines = f.read().splitlines()
         for line in lines:
             if "function " in line and "--exported" in line:
