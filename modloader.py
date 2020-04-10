@@ -1,7 +1,7 @@
 import subprocess, os, sys, json
 from datetime import datetime
 
-ids = [1, 2, 3]
+ids = [1, 2, 3, 4]
 
 config = {'manual': False,'info_level': 0, 'restricted_extensions': [], 'ignore_files': ["meta.xml", "meta-generated.xml"], 'author': "Default", 'cache': False, 'override': True, 'generate_exported': True}
 
@@ -10,9 +10,21 @@ def read_json(file):
         data = json.load(json_file)
     return data
 
+
 def to_json(dict, filename):
     with open(filename, 'w') as fp:
         json.dump(dict, fp,  indent=4)
+
+
+def verifyFiles(filename, check_col):
+    is_dff = os.path.isfile(working_folder + "\\" + filename + ".dff")
+    is_txd = os.path.isfile(working_folder + "\\" + filename + ".txd")
+    if check_col:
+        is_col = os.path.isfile(working_folder + "\\" + filename + ".col")
+    else:
+        is_col = True
+    return is_dff and is_txd and is_col
+
 
 models_data = dict(world_objects = dict(), other = dict())
 if len(sys.argv) > 1 and os.path.isdir(sys.argv[1]):
@@ -29,7 +41,7 @@ if len(sys.argv) > 1 and os.path.isdir(sys.argv[1]):
     if dff_count > len(ids):
         sys.exit("ERROR: Not enough free ID's to replace all models!")
     print("INFO: There are " + str(dff_count) + " unique dff models in all subfolders.")
-    if os.path.isfile(working_folder + "\\assigment-model.json"):
+    if False:#os.path.isfile(working_folder + "\\assigment-model.json"):
         print("INFO: Loading assigment model!")
         if os.path.isfile(working_folder + "\\linking-rules.json"):
             print("INFO: Loading linking rules!")
@@ -49,9 +61,16 @@ if len(sys.argv) > 1 and os.path.isdir(sys.argv[1]):
                     name, ext = os.path.splitext(file)
                     if ext == ".dff":
                         if "skins" in file_path:
-                            models_data['other'][name] = ids.pop(0)
+                            if verifyFiles(file_path.replace(".dff", ""), False):
+                                models_data['other'][file_path] = ids.pop(0)
+                            else:
+                                print("WARNING: NOT FOUND VALID SET OF FILES FOR SKIN:", file_path)
                         else:
-                            models_data['world_objects'][name] = ids.pop(0)
+                            if verifyFiles(file_path.replace(".dff", ""), True):
+                                models_data['world_objects'][file_path] = ids.pop(0)
+                            else:
+                                print("WARNING: NOT FOUND VALID SET OF FILES FOR WORLD OBJECT:", file_path)
+        print("INFO: Saving assigment model")
         to_json(models_data, "assigment-model.json")
                     
             
