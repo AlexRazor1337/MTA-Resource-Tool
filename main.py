@@ -28,6 +28,7 @@ def compile_file(file_path):
     if os.path.isfile(file_basename + "c"):
         file_basename = str(datetime.now().time()).replace(":", ".", -1) + file_basename
         if config['info_level'] < 3:
+            print(file_path)
             print("WARNING: File with this name already exists, compiling to", file_basename, "instead!")
     arguments = ["-" + config['obfuscation_level'], " -o " + file_basename + "c"," -- ", file_path]
     subprocess.call([working_dir + "\luac_mta.exe", arguments])
@@ -57,40 +58,26 @@ if len(sys.argv) > 1:
         if config['info_level'] < 2:
             print("INFO: Working with folder, compiling to", resource_name)
         for dirPath, dirs, files in os.walk(sys.argv[1]): #main cycle, walks through everything in root folder
+            current_dir = dirPath.replace(sys.argv[1], "")
+            if current_dir != "":
+                os.chdir(working_dir + os.sep + "Compiled Resources" + os.sep + resource_name + os.sep + current_dir)
+            else:
+                os.chdir(working_dir + os.sep + "Compiled Resources" + os.sep + resource_name)
             for dir in dirs:
                 if not dir.startswith('.'): #ignoring .git and etc. basically
-                    dir_path = dirPath.replace(sys.argv[1], "")
-                    if dir_path != "": #check if it is not in the root folder
-                        folders = dir_path.split("\\")
-                        os.chdir(folders[-1])
                     os.mkdir(dir)
 
-                    for file in files:
-                        name, ext = os.path.splitext(file)
-                        if ext == ".lua":
-                            compile_file(dirPath + "\\" + file)
-                        else:
-                            if not ext in config['restricted_extensions']:
-                                copyfile(dirPath + "\\" + file, file)
-                                if config['info_level'] == 0:
-                                    print("INFO: Copying", file)
-                            elif config['info_level'] == 0:
-                                print("INFO: Not copying", file, "because it has restricted extension.")
-
-            if len(dirs) == 0: #when there are no folders inside another folder, it can't iterate through it, so previsios cycle won't run
-                dir_path = dirPath.replace(sys.argv[1], "")
-                folders = dir_path.split("\\")
-                if not folders[-1].startswith('.'):
-                    if dir_path != "":
-                        os.chdir(folders[-1])
-                    for file in files:
-                        name, ext = os.path.splitext(file)
-                        if ext == ".lua":
-                            compile_file(dirPath + "\\" + file)
-                        else:
-                            copyfile(dirPath + "\\" + file, file)
-                            if config['info_level'] == 0:
-                                print("INFO: Copying", file)
+            for file in files:
+                name, ext = os.path.splitext(file)
+                if ext == ".lua":
+                    compile_file(dirPath + "\\" + file)
+                else:
+                    if not ext in config['restricted_extensions']:
+                        copyfile(dirPath + "\\" + file, file)
+                        if config['info_level'] == 0:
+                            print("INFO: Copying", file)
+                    elif config['info_level'] == 0:
+                        print("INFO: Not copying", file, "because it has restricted extension.")
         
         os.chdir(working_dir + "\Compiled Resources\\" + "\\" + resource_name)
         if os.path.isfile("meta.xml"):

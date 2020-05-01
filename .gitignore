@@ -5,3 +5,6 @@ teestresource/
 Compiled Resources/
 settings.json
 mdgen
+.vscode/launch.json
+.vscode/.ropeproject/config.py
+.vscode/.ropeproject/objectdb
