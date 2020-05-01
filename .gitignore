@@ -5,3 +5,5 @@ teestresource/
 Compiled Resources/
 settings.json
 mdgen
+.vscode/
+
