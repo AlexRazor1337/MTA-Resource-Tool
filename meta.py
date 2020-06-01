@@ -2,7 +2,7 @@ import os, sys, json
 from datetime import datetime
 
 
-config = {'manual': False,'info_level': 0, 'restricted_extensions': [], 'ignore_files': ["meta.xml", "meta-generated.xml"], 'author': "Default", 'cache': False, 'override': True, 'force_override': False,'generate_exported': True}
+config = {'manual': False,'info_level': 0, 'restricted_extensions': [], 'ignore_files': ["meta.xml", "meta-generated.xml", "resource.json"], 'author': "Default", 'cache': False, 'override': True, 'force_override': False,'generate_exported': True}
 type_cases = {'client':["client"], 'server':["server"]}
 prefix_cases = {'client':["c_"], 'server':["s_"]}
 
