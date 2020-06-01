@@ -28,7 +28,8 @@ List of functional:
   - You can add specific files to be ignored.
   - You can set field "author" that will be in meta file.
   - You can enable and disable caching of client script files(disabled by default).
-  - You can enable owerwriting of old meta file in config(so new file will be named as "meta.xml" and not "meta-generated.xml"), but old meta file still will be saved as ".meta-old xml" + timecode of operation. You will be asked about overriding meta each time because of safety reasons.
+  - You can enable overwriting of old meta file in config(so new file will be named as "meta.xml" and not "meta-generated.xml"), but old meta file still will be saved as ".meta-old xml" + timecode of operation. You will be asked about overriding meta each time because of safety reasons.
+  - You can enable force overwrite and i wan't ask ypu about overwriting meta, useful for automation.
   - You can enable or generating of [exported functions](https://wiki.multitheftauto.com/wiki/Call). For this to work, you must add "--exported" to the function header line, example:
   ```lua
      function foo() --exported
@@ -36,6 +37,18 @@ List of functional:
   ```
   - Ignore files and folders starting with ".", e.g ".git"
   - Use different info levels for information output
+  - You can create file "resource.json" which contains info about resource and used in meta generation. It's must be placed in resource root folder. Currently supported "oop", "aclrights", "author", "description". Here is example of such file:
+```json
+     {
+      "author": "Default",
+      "description": "This is test resource to demonstrate tool functional",
+      "oop": true,
+      "rights": {
+        "general.ModifyOtherObjects": true, 
+        "function.startResource": false
+      }
+    }
+```
   
 ## Examples
 
@@ -53,6 +66,9 @@ Generate meta file for folder:
 ```
  meta.py D:\Resources\ResourceToCompile
 ```
+
+Also you can look at example resource in folder "testResource", it contains "resource.json" example and demonstrates all main functional of this tool.
+
 ### Prerequisites
 
 This script should work with any Python 3.*, no non-standard libraries are used.
