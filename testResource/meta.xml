@@ -1,0 +1,17 @@
+<meta>
+	<info name="testResource" description="This is test resource to demonstrate tool functional" author="Default"/>
+	<oop>true</oop>
+	<aclrequest>
+		<right name="general.ModifyOtherObjects" access="true"></right>
+		<right name="function.startResource" access="false"></right>
+	</aclrequest>
+
+	<script src="client.lua" type="client" cache = "false"/>
+	<script src="c_main.lua" type="client" cache = "false"/>
+	<file src="resource.json"/>
+
+	<file src="media\mtasa.jpg"/>
+
+	<script src="server\core.lua" type="server" />
+	<export function="exported_function_demo" type="client" />
+</meta>

@@ -1,0 +1,9 @@
+{
+    "author": "Default",
+    "description": "This is test resource to demonstrate tool functional",
+    "oop": true,
+    "rights": {
+      "general.ModifyOtherObjects": true, 
+      "function.startResource": false
+    }
+}
