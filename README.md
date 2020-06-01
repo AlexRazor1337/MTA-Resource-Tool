@@ -29,7 +29,7 @@ List of functional:
   - You can set field "author" that will be in meta file.
   - You can enable and disable caching of client script files(disabled by default).
   - You can enable overwriting of old meta file in config(so new file will be named as "meta.xml" and not "meta-generated.xml"), but old meta file still will be saved as ".meta-old xml" + timecode of operation. You will be asked about overriding meta each time because of safety reasons.
-  - You can enable force overwrite and i wan't ask ypu about overwriting meta, useful for automation.
+  - You can enable force overwrite and it wan't ask you about overwriting meta, useful for automation.
   - You can enable or generating of [exported functions](https://wiki.multitheftauto.com/wiki/Call). For this to work, you must add "--exported" to the function header line, example:
   ```lua
      function foo() --exported
