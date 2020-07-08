@@ -59,6 +59,10 @@ if len(sys.argv) > 1:
             print("INFO: Working with folder, compiling to", resource_name)
         for dirPath, dirs, files in os.walk(sys.argv[1]): #main cycle, walks through everything in root folder
             current_dir = dirPath.replace(sys.argv[1], "")
+            check_dirs = [d for d in current_dir.split("\\") if d.startswith(".")]
+            if check_dirs:
+                continue
+            
             if current_dir != "":
                 os.chdir(working_dir + os.sep + "Compiled Resources" + os.sep + resource_name + os.sep + current_dir)
             else:
