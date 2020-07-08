@@ -62,7 +62,7 @@ if len(sys.argv) > 1:
             check_dirs = [d for d in current_dir.split("\\") if d.startswith(".")]
             if check_dirs:
                 continue
-            
+
             if current_dir != "":
                 os.chdir(working_dir + os.sep + "Compiled Resources" + os.sep + resource_name + os.sep + current_dir)
             else:
@@ -86,10 +86,12 @@ if len(sys.argv) > 1:
         os.chdir(working_dir + "\Compiled Resources\\" + "\\" + resource_name)
         if os.path.isfile("meta.xml"):
             with open("meta.xml", "r+") as meta_file:
-                file_string = meta_file.read()
+                file_lines = meta_file.readlines()
                 meta_file.seek(0)
-                file_string = file_string.replace(".lua", ".luac", -1)
-                meta_file.write(file_string)
+                for line in file_lines:
+                    if not ".luac" in line:
+                        line = line.replace(".lua", ".luac", -1)
+                    meta_file.write(line)
                 meta_file.truncate()       
         else:
             if config['info_level'] < 3:
